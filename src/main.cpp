@@ -13,12 +13,8 @@ int main() {
 
 	for (int i = 0; i < n; i++) {
 		x = rand() % 100;
-		if (!bst.search(x)) {
-			cout << "Number i: " << x << endl;
-			bst.insert(x);
-		} else {
-			--i;
-		}
+		cout << "Number i: " << x << endl;
+		bst.insert(x);
 	}
 
 	cout << endl;
