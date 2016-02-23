@@ -4,19 +4,16 @@
 using namespace std;
 
 BST::BST() {
-	mRoot = nullptr;
+	mRoot = std::unique_ptr<Node>(nullptr);
 }
 
-BST::~BST() {
-	delete mRoot;
-}
 void BST::insert(int data) {
-	mRoot = insertNext(mRoot, data);
+	mRoot = std::move(insertNext(mRoot, data));
 }
 
-Node* BST::insertNext(Node* root, int data) {
-	if 			(root == nullptr)
-		root = new Node(data);
+std::unique_ptr<Node>& BST::insertNext(std::unique_ptr<Node>& root, int data) {
+	if (root.get() == nullptr)
+		root = std::unique_ptr<Node>(new Node(data));
 	else if (data <= root->getData())
 		root->setLeft(insertNext(root->getLeft(), data));
 	else if (data >  root->getData())
@@ -33,8 +30,8 @@ void BST::printLevelOrder() {
 		std::cout << std::endl;
 	}
 }
-void BST::printGivenLevel(Node* root, int level){
-	if (root == nullptr) {
+void 	BST::printGivenLevel	(const std::unique_ptr<Node>& root, int level) const {
+	if (root.get() == nullptr) {
 		std::cout << "-- ";
 	} else if (level == 0) {
 		std::cout << root->getData() << " ";
@@ -47,8 +44,8 @@ void BST::printGivenLevel(Node* root, int level){
 int BST::getHeight() {
 	return getHeight(mRoot, 0);
 }
-int BST::getHeight(Node* root, int level) {
-	if (root == nullptr) return level;
+int BST::getHeight	(const std::unique_ptr<Node>& root, int level) const {
+	if (root.get() == nullptr) return level;
 
 	int n1 = getHeight(root->getLeft() , level + 1);
 	int n2 = getHeight(root->getRight(), level + 1);
@@ -56,68 +53,52 @@ int BST::getHeight(Node* root, int level) {
 	return n1 >= n2 ? n1 : n2;
 }
 
-bool BST::search(int data) {
-	for (Node* curr = mRoot; curr != nullptr; ) {
-	  if (data == curr->getData()) {
-			return true;
-		} else if (data > curr->getData()) {
-			curr = curr->getRight();
-		} else {
-			curr = curr->getLeft();
-		}
+	bool BST::remove(int data) {
+		mRoot = std::move(remove(mRoot, data, mRoot));
+		return mRoot != nullptr;
 	}
-	return false;
-}
 
-bool BST::remove(int data) {
-	mRoot = remove(mRoot, data, mRoot);
-	return mRoot != nullptr;
-}
+	std::unique_ptr<Node>& BST::remove(std::unique_ptr<Node>& root, int data, std::unique_ptr<Node>& parent) {
+		if (root.get() == nullptr) return root;
+		else if (data > root->getData()) remove(root->getRight(), data, root);
+		else if (data < root->getData()) remove(root->getLeft(), data, root);
+		else {
+			/* No child */
+			if (root->getLeft().get() == nullptr && root->getRight().get() == nullptr) {
+				if (parent->getRight() == root) {
+					std::unique_ptr<Node> right (nullptr);
+					parent->setRight(right);
+				} else if (parent->getLeft() == root) {
+					std::unique_ptr<Node> left (nullptr);
+					parent->setLeft(left);
+				}
 
-Node* BST::remove(Node* root, int data, Node* parent) {
-	if (root == nullptr) return nullptr;
-	else if (data > root->getData()) remove(root->getRight(), data, root);
-	else if (data < root->getData()) remove(root->getLeft(), data, root);
-	else {
-		/* No child */
-		if (root->getLeft() == nullptr && root->getRight() == nullptr) {
-			if (parent->getRight() == root) {
-				parent->setRight(nullptr);
-			} else if (parent->getLeft() == root) {
-				parent->setLeft(nullptr);
+				root = std::unique_ptr<Node>(nullptr);
 			}
-
-			delete root;
-			root = nullptr;
-		}
-		/* One child */
-		else if (root->getLeft() == nullptr)
+				/* One child */
+		else if (root->getLeft().get() == nullptr)
 		{
-			Node* tmp = root;
+			std::unique_ptr<Node> tmp = std::move(root);
 
-			if (parent->getRight() == root) {
-				parent->setRight(root->getRight());
-			} else if (parent->getLeft() == root) {
-				parent->setLeft(root->getRight());
+			if (parent->getRight() == tmp) {
+				parent->setRight(tmp->getRight());
+			} else if (parent->getLeft() == tmp) {
+				parent->setLeft(tmp->getRight());
 			}
 
-			root = root->getRight();
-			delete tmp;
-			tmp = nullptr;
+			root = std::move(tmp->getRight());
 		}
-		else if (root->getRight() == nullptr)
+		else if (root->getRight().get() == nullptr)
 		{
-			Node* tmp = root;
+			std::unique_ptr<Node> tmp = std::move(root);
 
-			if (parent->getRight() == root) {
-				parent->setRight(root->getLeft());
-			} else if (parent->getLeft() == root) {
-				parent->setLeft(root->getLeft());
+			if (parent->getRight() == tmp) {
+				parent->setRight(tmp->getLeft());
+			} else if (parent->getLeft() == tmp) {
+				parent->setLeft(tmp->getLeft());
 			}
 
-			root = root->getLeft();
-			delete tmp;
-			tmp = nullptr;
+			root = std::move(tmp->getLeft());
 		}
 		/* Two childs */
 		else
@@ -132,9 +113,9 @@ Node* BST::remove(Node* root, int data, Node* parent) {
 	return root;
 }
 
-Node* BST::getMin(Node* root) {
+Node* BST::getMin (const std::unique_ptr<Node>& root) const {
 	Node* min;
-	for (min = root; min->getLeft() != nullptr; min = min->getLeft());
+	for (min = root.get(); min->getLeft() != nullptr; min = min->getLeft().get());
 
 	return min;
 }

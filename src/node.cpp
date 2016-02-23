@@ -1,10 +1,12 @@
+#include <utility>
 #include "node.hpp"
 
 Node::Node(int data) {
-	mData 	= data;
-	mRight 	= nullptr;
-	mLeft 	= nullptr;
+	mRight = std::unique_ptr<Node>(nullptr);
+	mLeft  = std::unique_ptr<Node>(nullptr);
+	mData  = data;
 }
+
 Node::~Node() {
 	mData = -1;
 }
@@ -16,16 +18,16 @@ void Node::setData(int data){
 	mData = data;
 }
 
-Node* Node::getLeft(){
+std::unique_ptr<Node>& Node::getLeft(){
 	return mLeft;
 }
-void 	Node::setLeft(Node* node){
-	mLeft = node;
+void 	Node::setLeft(std::unique_ptr<Node>& node){
+	mLeft = std::move(node);
 }
 
-Node* Node::getRight(){
+std::unique_ptr<Node>& Node::getRight(){
 	return mRight;
 }
-void Node::setRight(Node* node){
-	mRight = node;
+void Node::setRight(std::unique_ptr<Node>& node){
+	mRight = std::move(node);
 }
