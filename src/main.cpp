@@ -24,6 +24,8 @@ int main() {
 		cout << "Remove > "; cin >> x; cout << endl;
 		bst.remove(x);
 		bst.printLevelOrder();
+		cout << endl;
+		bst.printInorder();
 	}
 
 	return 0;

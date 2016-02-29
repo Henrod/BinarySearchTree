@@ -22,7 +22,7 @@ unique_ptr<Node>& BST::insertNext(unique_ptr<Node>& root, int data) {
 	return root;
 }
 
-void BST::printLevelOrder() {
+void BST::printLevelOrder() const {
 	mHeight = getHeight();
 
 	for (int level = 0; level < mHeight; ++level) {
@@ -41,7 +41,7 @@ void 	BST::printGivenLevel	(const unique_ptr<Node>& root, int level) const {
 	}
 }
 
-int BST::getHeight() {
+int BST::getHeight() const {
 	return getHeight(mRoot, 0);
 }
 int BST::getHeight	(const unique_ptr<Node>& root, int level) const {
@@ -112,4 +112,15 @@ Node* BST::getMin (const unique_ptr<Node>& root) const {
 	for (min = root.get(); min->getLeft() != nullptr; min = min->getLeft().get());
 
 	return min;
+}
+
+void BST::printInorder() const {
+	printInorder(mRoot);
+}
+
+void BST::printInorder(const unique_ptr<Node>& root) const {
+	if (root.get() == nullptr) return;
+	printInorder(root->getLeft());
+	cout << root->getData() << " ";
+	printInorder(root->getRight());
 }

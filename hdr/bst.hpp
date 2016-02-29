@@ -5,14 +5,16 @@ class BST {
 		BST();
 		void 		insert					(int data);
 		bool		remove					(int data);
-		void 		printLevelOrder	();
-		int  		getHeight				();
+		void 		printLevelOrder	() const;
+		void 		printInorder		() const;
+		int  		getHeight				() const;
 		Node*   getMin (const std::unique_ptr<Node>& root) const;
 	private:
 		std::unique_ptr<Node> mRoot;
-		int 	mHeight;
+		int mutable mHeight;
 		std::unique_ptr<Node>& insertNext (std::unique_ptr<Node>& root, int data);
 		int   getHeight				(const std::unique_ptr<Node>& root, int level) const;
 		void 	printGivenLevel	(const std::unique_ptr<Node>& root, int level) const;
+		void 	printInorder		(const std::unique_ptr<Node>& root) const;
 		std::unique_ptr<Node>& remove (std::unique_ptr<Node>& root, int data, std::unique_ptr<Node>& parent);
 };
