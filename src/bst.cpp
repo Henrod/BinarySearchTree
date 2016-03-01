@@ -124,3 +124,28 @@ void BST::printInorder(const unique_ptr<Node>& root) const {
 	cout << root->getData() << " ";
 	printInorder(root->getRight());
 }
+
+unique_ptr<Node>& BST::search(const int data) {
+	return search(mRoot, data);
+}
+
+unique_ptr<Node>& BST::search(unique_ptr<Node>& root, const int data) {
+	if (root.get() == nullptr) return root;
+
+	if (root->getData() == data) return root;
+	unique_ptr<Node>& node = search(root->getLeft(), data);
+
+	return node.get() == nullptr ? search(root->getRight(), data) : node;
+}
+
+void BST::swap(const int data) {
+	unique_ptr<Node>& node = search(data);
+	swap(node);
+}
+
+void BST::swap(unique_ptr<Node>& root) {
+	unique_ptr<Node> tmp = move(root->getRight());
+	root->setRight(root->getLeft());
+	root->setLeft(tmp);
+
+}

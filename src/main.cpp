@@ -21,6 +21,13 @@ int main() {
 	bst.printLevelOrder();
 
 	while (true) {
+		cout << "Swap > "; cin >> x; cout << endl;
+		bst.swap(x);
+		bst.printInorder();
+		cout << endl;
+	}
+
+	while (false) {
 		cout << "Remove > "; cin >> x; cout << endl;
 		bst.remove(x);
 		bst.printLevelOrder();

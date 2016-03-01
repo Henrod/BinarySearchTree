@@ -9,6 +9,7 @@ class BST {
 		void 		printInorder		() const;
 		int  		getHeight				() const;
 		Node*   getMin (const std::unique_ptr<Node>& root) const;
+		void 		swap						(const int data);
 	private:
 		std::unique_ptr<Node> mRoot;
 		int mutable mHeight;
@@ -17,4 +18,7 @@ class BST {
 		void 	printGivenLevel	(const std::unique_ptr<Node>& root, int level) const;
 		void 	printInorder		(const std::unique_ptr<Node>& root) const;
 		std::unique_ptr<Node>& remove (std::unique_ptr<Node>& root, int data, std::unique_ptr<Node>& parent);
+		void 		swap(std::unique_ptr<Node>& root);
+		std::unique_ptr<Node>& search(const int data);
+		std::unique_ptr<Node>& search(std::unique_ptr<Node>& root, const int data);
 };
