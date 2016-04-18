@@ -30,7 +30,8 @@ void BST::printLevelOrder() const {
 		cout << endl;
 	}
 }
-void 	BST::printGivenLevel	(const unique_ptr<Node>& root, int level) const {
+
+void BST::printGivenLevel	(const unique_ptr<Node>& root, int level) const {
 	if (root.get() == nullptr) {
 		cout << "-- ";
 	} else if (level == 0) {
@@ -114,15 +115,44 @@ Node* BST::getMin (const unique_ptr<Node>& root) const {
 	return min;
 }
 
-void BST::printInorder() const {
-	printInorder(mRoot);
+void BST::print(ORDER order) const {
+	switch(order) {
+		case ORDER::IN_ORDER:
+			printInorder(mRoot);
+			break;
+		case ORDER::PRE_ORDER:
+			printPreorder(mRoot);
+			break;
+		case ORDER::POS_ORDER:
+			printPosorder(mRoot);
+			break;
+		default:
+			cout << "Wrong order" << endl;
+	}
+}
+
+void BST::printPreorder(const unique_ptr<Node>& root) const {
+	if (root.get() == nullptr) return;
+
+	cout << root->getData() << " ";
+	printPreorder(root->getLeft());
+	printPreorder(root->getRight());
 }
 
 void BST::printInorder(const unique_ptr<Node>& root) const {
 	if (root.get() == nullptr) return;
+
 	printInorder(root->getLeft());
 	cout << root->getData() << " ";
 	printInorder(root->getRight());
+}
+
+void BST::printPosorder(const unique_ptr<Node>& root) const {
+	if (root.get() == nullptr) return;
+
+	printPosorder(root->getLeft());
+	printPosorder(root->getRight());
+	cout << root->getData() << " ";
 }
 
 unique_ptr<Node>& BST::search(const int data) {

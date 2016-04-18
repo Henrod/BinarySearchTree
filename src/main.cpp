@@ -23,7 +23,7 @@ int main() {
 	while (true) {
 		cout << "Swap > "; cin >> x; cout << endl;
 		bst.swap(x);
-		bst.printInorder();
+		bst.print(ORDER::PRE_ORDER);
 		cout << endl;
 	}
 
@@ -32,7 +32,7 @@ int main() {
 		bst.remove(x);
 		bst.printLevelOrder();
 		cout << endl;
-		bst.printInorder();
+		bst.print(ORDER::PRE_ORDER);
 	}
 
 	return 0;
