@@ -20,10 +20,15 @@ int main() {
 	cout << endl;
 	bst.printLevelOrder();
 
-	while (true) {
+	/*while (true) {
 		cout << "Remove > "; cin >> x; cout << endl;
 		bst.remove(x);
 		bst.printLevelOrder();
+	}*/
+
+	while (true) {
+		cout << "Sucessor of > "; cin >> x;
+		cout << (bst.successor(x) != nullptr ? to_string(bst.successor(x)->getData()) : "NULL") << endl;
 	}
 
 	return 0;

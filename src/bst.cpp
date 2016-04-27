@@ -15,7 +15,7 @@ void BST::insert(int data) {
 }
 
 Node* BST::insertNext(Node* root, int data) {
-	if 			(root == nullptr)
+	if (root == nullptr)
 		root = new Node(data);
 	else if (data <= root->getData())
 		root->setLeft(insertNext(root->getLeft(), data));
@@ -56,17 +56,17 @@ int BST::getHeight(Node* root, int level) {
 	return n1 >= n2 ? n1 : n2;
 }
 
-bool BST::search(int data) {
+Node* BST::search(int data) const {
 	for (Node* curr = mRoot; curr != nullptr; ) {
 	  if (data == curr->getData()) {
-			return true;
+			return curr;
 		} else if (data > curr->getData()) {
 			curr = curr->getRight();
 		} else {
 			curr = curr->getLeft();
 		}
 	}
-	return false;
+	return nullptr;
 }
 
 bool BST::remove(int data) {
@@ -122,7 +122,7 @@ Node* BST::remove(Node* root, int data, Node* parent) {
 		/* Two childs */
 		else
 		{
-			Node* tmp = getMin(root->getRight());
+			Node* tmp = min(root->getRight());
 
 			root->setData(tmp->getData());
 			root->setRight(remove(root->getRight(), tmp->getData(), root->getRight()));
@@ -132,9 +132,75 @@ Node* BST::remove(Node* root, int data, Node* parent) {
 	return root;
 }
 
-Node* BST::getMin(Node* root) {
+Node* BST::min() const {
+	return min(mRoot);
+}
+
+Node* BST::min(Node* root) const {
+	if (!root) return nullptr;
 	Node* min;
 	for (min = root; min->getLeft() != nullptr; min = min->getLeft());
 
 	return min;
+}
+
+Node* BST::max() const {
+	return max(mRoot);
+}
+
+Node* BST::max(Node* root) const {
+	if (!root) return nullptr;
+
+	Node* max;
+	for (max = root; max->getRight() != nullptr; max = max->getRight());
+
+	return max;
+}
+
+Node* BST::successor(int x) const {
+	Node* root = search(x);
+	if (!root) return nullptr;
+
+	if (root->getRight() != nullptr) {
+		return min(root->getRight());
+	}
+
+	Node* node = mRoot;
+	Node* succ = nullptr;
+	while (node != nullptr) {
+		if (node->getData() == root->getData()) {
+			break;
+		} else if (node->getData() < root->getData()) {
+			node = node->getRight();
+		} else if (node->getData() > root->getData()) {
+			succ = node;
+			node = node->getLeft();
+		}
+	}
+
+	return succ;
+}
+
+Node* BST::predecessor(int x) const {
+	Node* root = search(x);
+	if (!root) return nullptr;
+
+	if (root->getLeft() != nullptr) {
+		return max(root->getLeft());
+	}
+
+	Node* node = mRoot;
+	Node* pred = nullptr;
+	while (node != nullptr) {
+		if (node->getData() == root->getData()) {
+			break;
+		} else if (node->getData() > root->getData()) {
+			node = node->getLeft();
+		} else if (node->getData() < root->getData()) {
+			pred = node;
+			node = node->getRight();
+		}
+	}
+
+	return pred;
 }
